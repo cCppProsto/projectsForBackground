@@ -18,9 +18,9 @@ private:
   appSettings();
 
 private:
-  int m_window_width{800};
-  int m_window_heigth{800};
-  float m_draw_objects_pt_size{40};
+  int m_window_width{1576};
+  int m_window_heigth{768};
+  float m_draw_objects_pt_size{1};
 };
 
 #endif // APPSETTINGS_HPP

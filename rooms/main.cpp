@@ -21,6 +21,18 @@ static void gl_mouse_func(int aButton, int aState, int aX, int aY);
 room g_room_a;
 room g_room_b;
 
+static void init_room_a()
+{
+  g_room_a.setPosition(1, 1);
+  g_room_a.setSize(256, 256);
+  g_room_a.setGroundType(eGroundType::GroundType_1);
+
+  g_room_a.addDoor(256, 32*3, 256, 32*5, true);
+
+  g_room_a.addRoomObject(eTypeRoomObject::Barrel, 0, 0);
+  g_room_a.addRoomObject(eTypeRoomObject::Barrel, 224, 0);
+}
+
 //------------------------------------------------------------------------------
 int main()
 {
@@ -34,40 +46,9 @@ int main()
   glutInitWindowSize(app_stg.windowWidth(), app_stg.windowHeight());
   glutCreateWindow(g_window_title);
 
-  g_room_a.setPosition(100,100);
-  g_room_a.setSize(10, 10);
-
-  g_room_a.addDoor(5, 0, 8, 0, true);
-  g_room_a.addDoor(1, 0, 2, 0, false);
-
-  g_room_a.addDoor(5, 9, 8, 9, false);
-  g_room_a.addDoor(1, 9, 2, 9, true);
-  g_room_a.addDoor(3, 9, 4, 9, true, false);
-
-  g_room_a.addDoor(0, 2, 0, 4, true);
-  g_room_a.addDoor(0, 7, 0, 9, false);
-
-  g_room_a.addDoor(9, 2, 9, 4, false);
-  g_room_a.addDoor(9, 7, 9, 9, true);
-
-
-  g_room_b.setPosition(200,100);
-  g_room_b.setSize(10, 10);
-
-  g_room_b.addDoor(5, 0, 8, 0, true);
-  g_room_b.addDoor(1, 0, 2, 0, false);
-
-  g_room_b.addDoor(5, 9, 8, 9, false);
-  g_room_b.addDoor(1, 9, 2, 9, true);
-  g_room_b.addDoor(3, 9, 4, 9, true, false);
-
-  g_room_b.addDoor(0, 2, 0, 4, true);
-  g_room_b.addDoor(0, 7, 0, 9, false);
-
-  g_room_b.addDoor(9, 2, 9, 4, false);
-  g_room_b.addDoor(9, 7, 9, 9, true);
-
   gl_init();
+
+  init_room_a();
 
   glutMainLoop();
 
@@ -82,6 +63,10 @@ void gl_init(void)
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glOrtho(0, app_stg.windowWidth(), app_stg.windowHeight(), 0, 0, 1);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
   glutKeyboardFunc(gl_key_func);
   glutMouseFunc(gl_mouse_func);

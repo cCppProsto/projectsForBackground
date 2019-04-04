@@ -6,10 +6,14 @@ CONFIG -= qt
 SOURCES += \
         main.cpp \
     appsettings.cpp \
-    room.cpp
+    room.cpp \
+    roomobjects.cpp \
+    barrelobj.cpp
 
-LIBS += -lGL -lglut
+LIBS += -lGL -lglut -lSOIL
 
 HEADERS += \
     appsettings.hpp \
-    room.hpp
+    room.hpp \
+    roomobjects.hpp \
+    barrelobj.hpp

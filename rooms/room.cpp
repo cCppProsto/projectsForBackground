@@ -1,8 +1,12 @@
 #include <algorithm>
+#include <SOIL/SOIL.h>
 #include <GL/gl.h>
 
 #include "room.hpp"
+#include "barrelobj.hpp"
 #include "appsettings.hpp"
+
+static const char *file_ground_texture = "pics/ground/ground_type_1.png";
 
 //------------------------------------------------------------------------------
 room::room()
@@ -27,6 +31,28 @@ void room::setSize(int aWidth, int aHeight)
   mv_border_lines.push_back( {0, m_height - 1, 0, 0} ); // left
 }
 //------------------------------------------------------------------------------
+void room::setGroundType(eGroundType aType)
+{
+  m_ground_type = aType;
+
+  switch(m_ground_type)
+  {
+    case eGroundType::GroundType_1:
+    {
+      m_ground_texture = SOIL_load_OGL_texture(file_ground_texture,
+                                               SOIL_LOAD_AUTO,
+                                               SOIL_CREATE_NEW_ID,
+                                               SOIL_FLAG_POWER_OF_TWO);
+
+      glBindTexture(GL_TEXTURE_2D, m_ground_texture);
+      glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &m_ground_texture_width);
+      glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &m_ground_texture_height);
+      glBindTexture(GL_TEXTURE_2D, 0);
+      break;
+    }
+  }
+}
+//------------------------------------------------------------------------------
 void room::addDoor(int aX1, int aY1,
                    int aX2, int aY2,
                    bool aIsOpened  /* = false */,
@@ -42,10 +68,67 @@ void room::addDoor(int aX1, int aY1,
   _calc_left_border_lines();
 }
 //------------------------------------------------------------------------------
+void room::addRoomObject(eTypeRoomObject aType, int aX, int aY)
+{
+  roomObjects *obj{nullptr};
+
+  switch(aType)
+  {
+    case eTypeRoomObject::Barrel:
+    {
+      obj = new barrelObj;
+      break;
+    }
+  }
+
+  if(obj != nullptr)
+  {
+    if(mv_room_objects.size() == 1)
+    {
+      barrelObj *b = dynamic_cast<barrelObj*>(obj);
+      b->open();
+    }
+    obj->setRoomPos(aX, aY);
+    mv_room_objects.push_back(obj);
+  }
+}
+//------------------------------------------------------------------------------
 void room::draw()const
 {
+  _draw_ground();
+  _draw_room_objects();
   _draw_border();
   _draw_doors();
+}
+//------------------------------------------------------------------------------
+void room::_draw_ground()const
+{
+  if(m_ground_texture == 0)
+    return;
+
+  auto &app_stg{appSettings::instance()};
+
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, m_ground_texture);
+
+  int c_count = m_width / m_ground_texture_width;
+  int l_count = m_height / m_ground_texture_height;
+
+  for(int l = 0; l < l_count; ++l)
+  {
+    float y_pos = m_y + l * m_ground_texture_height * app_stg.drawObjPtSize();
+    for(int c = 0; c < c_count; ++c)
+    {
+      float x_pos = m_x + c * m_ground_texture_width * app_stg.drawObjPtSize();
+      glBegin(GL_QUADS);
+        glTexCoord2i(0, 0); glVertex2i(x_pos, y_pos);
+        glTexCoord2i(1, 0); glVertex2i(x_pos + m_ground_texture_width * app_stg.drawObjPtSize(), y_pos);
+        glTexCoord2i(1, 1); glVertex2i(x_pos + m_ground_texture_width * app_stg.drawObjPtSize(), y_pos + m_ground_texture_height * app_stg.drawObjPtSize());
+        glTexCoord2i(0, 1); glVertex2i(x_pos, y_pos + m_ground_texture_height * app_stg.drawObjPtSize());
+      glEnd();
+    }
+  }
+  glDisable(GL_TEXTURE_2D);
 }
 //------------------------------------------------------------------------------
 void room::_draw_border()const
@@ -54,8 +137,8 @@ void room::_draw_border()const
 
   float pt_sz {app_stg.drawObjPtSize()};
 
-  glColor3ub(0, 0, 254);
-  glLineWidth(1.f);
+  glColor3ub(200, 100, 100);
+  glLineWidth(4.f);
   for(auto &l : mv_border_lines)
   {
     glBegin(GL_LINES);
@@ -71,7 +154,7 @@ void room::_draw_doors()const
 
   float pt_sz {app_stg.drawObjPtSize()};
 
-  glLineWidth(4.f);
+  glLineWidth(8.f);
   for(auto &d : mv_doors)
   {
     if(d.is_present)
@@ -86,6 +169,21 @@ void room::_draw_doors()const
         glVertex2i(m_x + d.x2 * pt_sz, m_y + d.y2 * pt_sz);
       glEnd();
     }
+  }
+}
+//------------------------------------------------------------------------------
+void room::_draw_room_objects()const
+{
+  auto &app_stg{appSettings::instance()};
+
+  for(auto &o : mv_room_objects)
+  {
+    int x = o->room_x();
+    int y = o->room_y();
+    x = m_x + x * app_stg.drawObjPtSize();
+    y = m_y + y * app_stg.drawObjPtSize();
+    o->setPos(x, y);
+    o->draw();
   }
 }
 //------------------------------------------------------------------------------
