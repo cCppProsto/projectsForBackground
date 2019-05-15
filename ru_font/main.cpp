@@ -28,7 +28,7 @@ void mouse_click_clb(GLFWwindow*, int, int, int);
 
 void draw_symbol()
 {
-  static std::u16string str = u"АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМм";
+  static std::u16string str = u"АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУу";
 
   static auto &font {rusFont::instance()};
 
@@ -38,12 +38,12 @@ void draw_symbol()
   for(const auto &ch : str)
   {
     glRasterPos2d(x, y);
-    glColor3ub(0, 0, 255);
+    glColor3ub(0, 0, 0);
     const auto &sz{font.getCharSize(ch)};
     glBitmap(sz.first, sz.second, 0, 0, 0, 0, font.getBorderBitmap(ch));
 
     glRasterPos2d(x, y);
-    glColor3ub(254, 0, 0);
+    glColor3ub(254, 254, 254);
     glBitmap(sz.first, sz.second, 0, 0, w, 0, font.getCharBitmap(ch));
     x += sz.first;
   }
