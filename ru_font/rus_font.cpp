@@ -1328,6 +1328,42 @@ static uint8_t rus_u[12*2] =
 0b00000000,0b00000000
 };
 
+
+// u'Ф'-------------------------------------------------------------------------
+static auto rus_F_size {std::make_pair(14, 12)};
+static uint8_t rus_F_border[12*2] =
+{
+  0b00000111,0b10000000,
+  0b00011100,0b11100000,
+  0b00110000,0b00110000,
+  0b01100100,0b10011000,
+  0b01001100,0b11001000,
+  0b01001100,0b11001000,
+  0b01001100,0b11001000,
+  0b01100100,0b10011000,
+  0b00110000,0b00110000,
+  0b00011100,0b11100000,
+  0b00000111,0b10000000,
+  0b00000000,0b00000000
+};
+
+static uint8_t rus_F[12*2] =
+{
+  0b00000000,0b00000000,
+  0b00000011,0b00000000,
+  0b00001111,0b11000000,
+  0b00011011,0b01100000,
+  0b00110011,0b00110000,
+  0b00110011,0b00110000,
+  0b00110011,0b00110000,
+  0b00011011,0b01100000,
+  0b00001111,0b11000000,
+  0b00000011,0b00000000,
+  0b00000000,0b00000000,
+  0b00000000,0b00000000
+};
+
+
 /*
 // u' '-------------------------------------------------------------------------
 static auto rus_ _size {std::make_pair(0, 0)};
@@ -1420,6 +1456,7 @@ const uint8_t *rusFont::getBorderBitmap(char16_t ch)
     case u'т':  return rus_t_border;
     case u'У':  return rus_U_border;
     case u'у':  return rus_u_border;
+    case u'Ф':  return rus_F_border;
   }
   return nullptr;
 }
@@ -1468,6 +1505,7 @@ const uint8_t *rusFont::getCharBitmap(char16_t ch)
     case u'т':  return rus_t;
     case u'У':  return rus_U;
     case u'у':  return rus_u;
+    case u'Ф':  return rus_F;
   }
   return nullptr;
 }
@@ -1517,6 +1555,7 @@ const std::pair<int, int> rusFont::getCharSize(char16_t ch)
     case u'т':  return rus_t_size;
     case u'У':  return rus_U_size;
     case u'у':  return rus_u_size;
+    case u'Ф':  return rus_F_size;
   }
   return std::make_pair(0,0);
 }

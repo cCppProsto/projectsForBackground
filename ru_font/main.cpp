@@ -28,7 +28,7 @@ void mouse_click_clb(GLFWwindow*, int, int, int);
 
 void draw_symbol()
 {
-  static std::u16string str = u"АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУу";
+  static std::u16string str = u"АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФ";
 
   static auto &font {rusFont::instance()};
 

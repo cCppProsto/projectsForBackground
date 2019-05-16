@@ -108,25 +108,35 @@ void room::_draw_ground()const
 
   auto &app_stg{appSettings::instance()};
 
+
+  auto &gw{m_ground_texture_width};
+  auto &gh{m_ground_texture_height};
+
+  int c_count = m_width / gw;
+  int l_count = m_height / gh;
+
+  auto gh_ptz{gh * app_stg.drawObjPtSize()};
+  auto gw_ptz{gw * app_stg.drawObjPtSize()};
+
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, m_ground_texture);
-
-  int c_count = m_width / m_ground_texture_width;
-  int l_count = m_height / m_ground_texture_height;
-
   for(int l = 0; l < l_count; ++l)
   {
-    float y_pos = m_y + l * m_ground_texture_height * app_stg.drawObjPtSize();
+    float y_1 = m_y + l * gh_ptz;
+    float y_2 = y_1 + gh_ptz;
+
     for(int c = 0; c < c_count; ++c)
     {
-      float x_pos = m_x + c * m_ground_texture_width * app_stg.drawObjPtSize();
+      float x_1 = m_x + c * gw_ptz;
+      float x_2 = x_1 + gw_ptz;
       glBegin(GL_QUADS);
-        glTexCoord2i(0, 0); glVertex2i(x_pos, y_pos);
-        glTexCoord2i(1, 0); glVertex2i(x_pos + m_ground_texture_width * app_stg.drawObjPtSize(), y_pos);
-        glTexCoord2i(1, 1); glVertex2i(x_pos + m_ground_texture_width * app_stg.drawObjPtSize(), y_pos + m_ground_texture_height * app_stg.drawObjPtSize());
-        glTexCoord2i(0, 1); glVertex2i(x_pos, y_pos + m_ground_texture_height * app_stg.drawObjPtSize());
+        glTexCoord2i(0, 0); glVertex2i(x_1, y_1);
+        glTexCoord2i(1, 0); glVertex2i(x_2, y_1);
+        glTexCoord2i(1, 1); glVertex2i(x_2, y_2);
+        glTexCoord2i(0, 1); glVertex2i(x_1, y_2);
       glEnd();
     }
+
   }
   glDisable(GL_TEXTURE_2D);
 }

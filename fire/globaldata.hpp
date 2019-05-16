@@ -11,9 +11,6 @@ public:
 
   void setWindowSize(int aWidth, int aHeight);
 
-  const int &windowWidth()const;
-  const int &windowHeight()const;
-
   rgbColor *palette();
 
   void setFireIndex(int aX, int aY, unsigned int aValue);
@@ -23,7 +20,7 @@ private:
   globalData();
   void _init_palette();
 
-private:
+public:
   int m_width{0};
   int m_height{0};
 

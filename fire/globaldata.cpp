@@ -34,16 +34,6 @@ void globalData::setWindowSize(int aWidth, int aHeight)
      mp_fire[i] = new unsigned int[aWidth + 1];
 }
 //------------------------------------------------------------------------------
-const int &globalData::windowWidth()const
-{
-  return m_width;
-}
-//------------------------------------------------------------------------------
-const int &globalData::windowHeight()const
-{
-  return m_height;
-}
-//------------------------------------------------------------------------------
 rgbColor *globalData::palette()
 {
   return g_palette;
@@ -62,17 +52,17 @@ void globalData::_init_palette()
 //------------------------------------------------------------------------------
 void globalData::setFireIndex(int aX, int aY, unsigned int aValue)
 {
-  if(aX >=0 && aX < m_width)
-    if(aY >=0 && aY < m_height)
+  //if(aX >=0 && aX < m_width)
+  //  if(aY >=0 && aY < m_height)
       mp_fire[aX][aY] = aValue;
 }
 //------------------------------------------------------------------------------
 unsigned int globalData::fireMapValue(int aX, int aY)
 {
-  if(aX >=0 && aX < m_width)
-    if(aY >=0 && aY < m_height)
+  //if(aX >=0 && aX < m_width)
+  //  if(aY >=0 && aY < m_height)
       return mp_fire[aX][aY];
-  return 0;
+  //return 0;
 }
 
 
